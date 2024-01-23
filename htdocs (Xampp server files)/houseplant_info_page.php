@@ -14,20 +14,23 @@
 
 	<?php
 
+	// import config file
 	require __DIR__ . "/config.php";
 
+	// get database variables from config file
 	$servername = SERVER_NAME;
 	$username = USERNAME;   
 	$password = PASSWORD;
 	$dbname = DATABASE_NAME;
 
-	// Create connection
+	// create connection
 	$conn = new mysqli($servername, $username, $password, $dbname);
-	// Check connection
+	// check connection
 	if ($conn->connect_error) {
 	  die("Connection failed: " . $conn->connect_error);
 	}
-	
+
+	// sql statement for getting last 10 entries
 	$sql = "SELECT * FROM houseplant_data WHERE id > ((SELECT max(id) FROM houseplant_data) - 10);";
 	$result = $conn->query($sql);
 	
@@ -52,7 +55,7 @@
 	  echo "0 results";
 	}
 
-// get last entry where soil level is below 30
+	// sql statement for getting last entry where plant was watered
 	$sql_last_watered = "SELECT * FROM houseplant_data WHERE id=(SELECT max(id) FROM houseplant_data WHERE hasBeenWatered= true);";
 	$result_last_watered = $conn->query($sql_last_watered);
 	
@@ -70,6 +73,7 @@
 	$conn->close();
 	?>
 
+	// display data to user
 	<h1>
 	Plant last watered <?php echo date ( 'd M Y h:i:s' , $last_watered ) ?>
 	<br>
